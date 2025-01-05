@@ -1,5 +1,9 @@
 Overview
-Walmart Sales Tracker is a Python-based project that uses a database to track customer purchases, employee commissions, and sales performance for Walmart stores in six major Indian cities: Delhi, Bangalore, Mumbai, Hyderabad, Chennai, and Kolkata. The project provides insightful data visualizations to analyze employee sales performance for the years 2023 and 2024.
+
+
+
+
+Walmart Sales Tracker is a Python-based project using a database to track customer purchases, employee commissions, and sales performance for stores in six major Indian cities: Delhi, Bangalore, Mumbai, Hyderabad, Chennai, and Kolkata. The project provides insightful data visualizations to analyze employee sales performance for 2023 and 2024.
 
 Features
 Database Design:
@@ -29,6 +33,7 @@ Libraries:
 pandas
 matplotlib
 sqlite3
+openmyxl
 Install dependencies using the following command:
 pip install -r requirements.txt
 
