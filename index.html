@@ -17,12 +17,37 @@
             background: #f5f7fa;
             color: #333;
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #f5f5f5;
         }
 
         .container {
-            max-width: 1200px;
+            display: flex;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+            height: fit-content;
+        }
+
+        .sidebar.dark-mode {
+            background: #2c2c2c;
+        }
+
+        .main-content {
+            flex: 1;
         }
 
         .header {
@@ -33,6 +58,10 @@
             text-align: center;
             margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header.dark-mode {
+            background: linear-gradient(135deg, #4b5cc4 0%, #5a3a8c 100%);
         }
 
         .header h1 {
@@ -53,7 +82,11 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s;
+        }
+
+        .stat-card.dark-mode {
+            background: #2c2c2c;
         }
 
         .stat-card:hover {
@@ -67,6 +100,10 @@
             margin-bottom: 10px;
         }
 
+        .dark-mode .stat-number {
+            color: #8a9cff;
+        }
+
         .stat-label {
             color: #666;
             font-size: 0.9rem;
@@ -74,15 +111,13 @@
             letter-spacing: 1px;
         }
 
+        .dark-mode .stat-label {
+            color: #999;
+        }
+
         .nav-tabs {
             display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            background: white;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
         }
 
@@ -95,15 +130,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            text-align: left;
+        }
+
+        .dark-mode .nav-tab {
+            background: #3a3a3a;
+            color: #f5f5f5;
         }
 
         .nav-tab:hover {
             background: #e9ecef;
         }
 
+        .dark-mode .nav-tab:hover {
+            background: #4a4a4a;
+        }
+
         .nav-tab.active {
             background: #667eea;
             color: white;
+        }
+
+        .dark-mode .nav-tab.active {
+            background: #4b5cc4;
         }
 
         .tab-content {
@@ -112,6 +161,10 @@
             border-radius: 10px;
             padding: 30px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .tab-content {
+            background: #2c2c2c;
         }
 
         .tab-content.active {
@@ -125,16 +178,28 @@
             border: 1px solid #dee2e6;
         }
 
+        .dark-mode .table-container {
+            border-color: #444;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
         }
 
+        .dark-mode table {
+            background: #2c2c2c;
+        }
+
         th, td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #dee2e6;
+        }
+
+        .dark-mode th, .dark-mode td {
+            border-bottom: 1px solid #444;
         }
 
         th {
@@ -144,10 +209,28 @@
             text-transform: uppercase;
             font-size: 0.85rem;
             letter-spacing: 0.5px;
+            cursor: pointer;
+        }
+
+        .dark-mode th {
+            background: #3a3a3a;
+            color: #ddd;
+        }
+
+        th.sortable:hover {
+            background: #e9ecef;
+        }
+
+        .dark-mode th.sortable:hover {
+            background: #4a4a4a;
         }
 
         tr:hover {
             background-color: #f8f9ff;
+        }
+
+        .dark-mode tr:hover {
+            background-color: #3a3a3a;
         }
 
         .chart-container {
@@ -158,6 +241,11 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: relative;
             height: 400px;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .chart-container {
+            background: #2c2c2c;
         }
 
         .chart-title {
@@ -168,11 +256,16 @@
             text-align: center;
         }
 
+        .dark-mode .chart-title {
+            color: #f5f5f5;
+        }
+
         .search-filter {
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .search-input, .filter-select {
@@ -180,7 +273,13 @@
             border: 2px solid #dee2e6;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode .search-input, .dark-mode .filter-select {
+            border-color: #444;
+            background: #3a3a3a;
+            color: #f5f5f5;
         }
 
         .search-input:focus, .filter-select:focus {
@@ -200,9 +299,71 @@
             margin-top: 30px;
         }
 
+        .action-button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-button:hover {
+            background: #5a6cd1;
+        }
+
+        .dark-mode .action-button {
+            background: #4b5cc4;
+        }
+
+        .dark-mode .action-button:hover {
+            background: #5a6cd1;
+        }
+
+        .summary-stats {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .dark-mode .summary-stats {
+            background: #3a3a3a;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            padding: 10px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .dark-mode .theme-toggle {
+            background: #3a3a3a;
+            border-color: #444;
+            color: #f5f5f5;
+        }
+
         @media (max-width: 768px) {
             .container {
+                flex-direction: column;
                 padding: 10px;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
             }
 
             .header h1 {
@@ -225,173 +386,189 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🏪 Walmart Sales Dashboard</h1>
-            <p>Sales Analytics & Employee Performance Tracking</p>
-        </div>
-
-        <!-- Statistics Overview -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="totalCustomers">600</div>
-                <div class="stat-label">Total Customers</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalEmployees">60</div>
-                <div class="stat-label">Employees</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalOrders">2,400</div>
-                <div class="stat-label">Total Orders</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalRevenue">$0</div>
-                <div class="stat-label">Revenue</div>
+        <div class="sidebar">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('customers')">Customers</button>
+                <button class="nav-tab" onclick="showTab('employees')">Employees</button>
+                <button class="nav-tab" onclick="showTab('orders')">Orders</button>
+                <button class="nav-tab" onclick="showTab('commissions')">Commissions</button>
+                <button class="nav-tab" onclick="showTab('analytics')">Analytics</button>
+                <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
             </div>
         </div>
+        <div class="main-content">
+            <div class="header">
+                <h1>🏪 Walmart Sales Dashboard</h1>
+                <p>Sales Analytics & Employee Performance Tracking</p>
+            </div>
 
-        <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('customers')">Customers</button>
-            <button class="nav-tab" onclick="showTab('employees')">Employees</button>
-            <button class="nav-tab" onclick="showTab('orders')">Orders</button>
-            <button class="nav-tab" onclick="showTab('commissions')">Commissions</button>
-            <button class="nav-tab" onclick="showTab('analytics')">Analytics</button>
-        </div>
-
-        <!-- Customers Tab -->
-        <div id="customers" class="tab-content active">
-            <h2>Customer Database</h2>
-            <div class="search-filter">
-                <input type="text" class="search-input" id="customerSearch" placeholder="Search customers..." oninput="filterTable('customersTable', this.value)">
-                <select class="filter-select" id="cityFilter" onchange="filterByCity()">
-                    <option value="">All Cities</option>
-                    <option value="Delhi">Delhi</option>
-                    <option value="Bangalore">Bangalore</option>
-                    <option value="Mumbai">Mumbai</option>
-                    <option value="Hyderabad">Hyderabad</option>
-                    <option value="Chennai">Chennai</option>
-                    <option value="Kolkata">Kolkata</option>
-                </select>
-            </div>
-            <div class="table-container">
-                <table id="customersTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>City</th>
-                            <th>Orders</th>
-                            <th>Total Spent</th>
-                        </tr>
-                    </thead>
-                    <tbody id="customersTableBody">
-                        <!-- Data will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Employees Tab -->
-        <div id="employees" class="tab-content">
-            <h2>Employee Database</h2>
-            <div class="search-filter">
-                <input type="text" class="search-input" placeholder="Search employees..." oninput="filterTable('employeesTable', this.value)">
-            </div>
-            <div class="table-container">
-                <table id="employeesTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>City</th>
-                            <th>Total Sales</th>
-                            <th>Commission</th>
-                        </tr>
-                    </thead>
-                    <tbody id="employeesTableBody">
-                        <!-- Data will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Orders Tab -->
-        <div id="orders" class="tab-content">
-            <h2>Orders Database</h2>
-            <div class="search-filter">
-                <input type="text" class="search-input" id="orderSearch" placeholder="Search orders..." oninput="filterTable('ordersTable', this.value)">
-                <select class="filter-select" id="orderYearFilter" onchange="filterOrders()">
-                    <option value="">All Years</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                </select>
-            </div>
-            <div class="table-container">
-                <table id="ordersTable">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer ID</th>
-                            <th>Employee ID</th>
-                            <th>Date</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ordersTableBody">
-                        <!-- Data will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Commissions Tab -->
-        <div id="commissions" class="tab-content">
-            <h2>Sales Commissions</h2>
-            <div class="search-filter">
-                <select class="filter-select" onchange="filterCommissions(this.value)">
-                    <option value="">All Years</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                </select>
-            </div>
-            <div class="table-container">
-                <table id="commissionsTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Employee ID</th>
-                            <th>Month</th>
-                            <th>Year</th>
-                            <th>Commission</th>
-                        </tr>
-                    </thead>
-                    <tbody id="commissionsTableBody">
-                        <!-- Data will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Analytics Tab -->
-        <div id="analytics" class="tab-content">
-            <h2>Sales Analytics</h2>
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <div class="chart-title">Sales by City</div>
-                    <canvas id="cityChart"></canvas>
+            <!-- Statistics Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCustomers">600</div>
+                    <div class="stat-label">Total Customers</div>
                 </div>
-                <div class="chart-container">
-                    <div class="chart-title">Monthly Sales Trend</div>
-                    <canvas id="monthlyChart"></canvas>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEmployees">60</div>
+                    <div class="stat-label">Employees</div>
                 </div>
-                <div class="chart-container">
-                    <div class="chart-title">Top Employees by Commission</div>
-                    <canvas id="employeeChart"></canvas>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalOrders">2,400</div>
+                    <div class="stat-label">Total Orders</div>
                 </div>
-                <div class="chart-container">
-                    <div class="chart-title">Revenue by Quarter</div>
-                    <canvas id="quarterChart"></canvas>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRevenue">$0</div>
+                    <div class="stat-label">Revenue</div>
+                </div>
+            </div>
+
+            <!-- Customers Tab -->
+            <div id="customers" class="tab-content active">
+                <h2>Customer Database</h2>
+                <div class="summary-stats" id="customerSummary"></div>
+                <div class="search-filter">
+                    <input type="text" class="search-input" id="customerSearch" placeholder="Search customers..." oninput="filterTable('customersTable', this.value)">
+                    <label for="cityFilter" style="margin-right:8px;">Filter by City:</label>
+                    <select class="filter-select" id="cityFilter" onchange="filterByCity()">
+                        <option value="">All Cities</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                    </select>
+                    <button class="action-button" onclick="exportToCSV('customersTable', 'customers_data')">Export to CSV</button>
+                </div>
+                <div class="table-container">
+                    <table id="customersTable">
+                        <thead>
+                            <tr>
+                                <th class="sortable" onclick="sortTable('customersTable', 0)">ID</th>
+                                <th class="sortable" onclick="sortTable('customersTable', 1)">Name</th>
+                                <th class="sortable" onclick="sortTable('customersTable', 2)">City</th>
+                                <th class="sortable" onclick="sortTable('customersTable', 3, 'number')">Orders</th>
+                                <th class="sortable" onclick="sortTable('customersTable', 4, 'number')">Total Spent</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Employees Tab -->
+            <div id="employees" class="tab-content">
+                <h2>Employee Database</h2>
+                <div class="summary-stats" id="employeeSummary"></div>
+                <div class="search-filter">
+                    <input type="text" class="search-input" placeholder="Search employees..." oninput="filterTable('employeesTable', this.value)">
+                    <button class="action-button" onclick="exportToCSV('employeesTable', 'employees_data')">Export to CSV</button>
+                </div>
+                <div class="table-container">
+                    <table id="employeesTable">
+                        <thead>
+                            <tr>
+                                <th class="sortable" onclick="sortTable('employeesTable', 0)">ID</th>
+                                <th class="sortable" onclick="sortTable('employeesTable', 1)">Name</th>
+                                <th class="sortable" onclick="sortTable('employeesTable', 2)">City</th>
+                                <th class="sortable" onclick="sortTable('employeesTable', 3, 'number')">Total Sales</th>
+                                <th class="sortable" onclick="sortTable('employeesTable', 4, 'number')">Commission</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders" class="tab-content">
+                <h2>Orders Database</h2>
+                <div class="summary-stats" id="orderSummary"></div>
+                <div class="search-filter">
+                    <input type="text" class="search-input" id="orderSearch" placeholder="Search orders..." oninput="filterTable('ordersTable', this.value)">
+                    <select class="filter-select" id="orderYearFilter" onchange="filterOrders()">
+                        <option value="">All Years</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                    <div class="date-range">
+                        <input type="date" class="filter-select" id="startDate" onchange="filterOrders()">
+                        <input type="date" class="filter-select" id="endDate" onchange="filterOrders()">
+                    </div>
+                    <button class="action-button" onclick="exportToCSV('ordersTable', 'orders_data')">Export to CSV</button>
+                </div>
+                <div class="table-container">
+                    <table id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th class="sortable" onclick="sortTable('ordersTable', 0)">Order ID</th>
+                                <th class="sortable" onclick="sortTable('ordersTable', 1)">Customer ID</th>
+                                <th class="sortable" onclick="sortTable('ordersTable', 2)">Employee ID</th>
+                                <th class="sortable" onclick="sortTable('ordersTable', 3)">Date</th>
+                                <th class="sortable" onclick="sortTable('ordersTable', 4, 'number')">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Commissions Tab -->
+            <div id="commissions" class="tab-content">
+                <h2>Sales Commissions</h2>
+                <div class="summary-stats" id="commissionSummary"></div>
+                <div class="search-filter">
+                    <select class="filter-select" onchange="filterCommissions(this.value)">
+                        <option value="">All Years</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                    <button class="action-button" onclick="exportToCSV('commissionsTable', 'commissions_data')">Export to CSV</button>
+                </div>
+                <div class="table-container">
+                    <table id="commissionsTable">
+                        <thead>
+                            <tr>
+                                <th class="sortable" onclick="sortTable('commissionsTable', 0)">ID</th>
+                                <th class="sortable" onclick="sortTable('commissionsTable', 1)">Employee ID</th>
+                                <th class="sortable" onclick="sortTable('commissionsTable', 2)">Month</th>
+                                <th class="sortable" onclick="sortTable('commissionsTable', 3)">Year</th>
+                                <th class="sortable" onclick="sortTable('commissionsTable', 4, 'number')">Commission</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commissionsTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <h2>Sales Analytics</h2>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-title">Sales by City</div>
+                        <canvas id="cityChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-title">Monthly Sales Trend</div>
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-title">Top Employees by Commission</div>
+                        <canvas id="employeeChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-title">Revenue by Quarter</div>
+                        <canvas id="quarterChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -431,7 +608,7 @@
             });
         }
 
-        // Generate sample orders - more realistic quantity
+        // Generate sample orders
         const orders = [];
         for (let i = 1; i <= 2400; i++) {
             const year = i <= 1200 ? 2023 : 2024;
@@ -467,6 +644,14 @@
         // Store chart instances to prevent memory leaks
         let chartInstances = {};
 
+        // Sorting states
+        let sortStates = {
+            customersTable: { column: 0, ascending: true },
+            employeesTable: { column: 0, ascending: true },
+            ordersTable: { column: 0, ascending: true },
+            commissionsTable: { column: 0, ascending: true }
+        };
+
         // Tab switching function
         function showTab(tabName) {
             // Hide all tabs
@@ -479,21 +664,25 @@
             
             // Show selected tab
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            document.querySelector(`.nav-tab[onclick="showTab('${tabName}')"]`).classList.add('active');
             
             // Load data for the selected tab
             switch(tabName) {
                 case 'customers':
                     populateCustomersTable();
+                    updateCustomerSummary();
                     break;
                 case 'employees':
                     populateEmployeesTable();
+                    updateEmployeeSummary();
                     break;
                 case 'orders':
                     populateOrdersTable();
+                    updateOrderSummary();
                     break;
                 case 'commissions':
                     populateCommissionsTable();
+                    updateCommissionSummary();
                     break;
                 case 'analytics':
                     setTimeout(createCharts, 100); // Delay to ensure DOM is ready
@@ -505,6 +694,43 @@
         function updateStatistics() {
             const totalRevenue = orders.reduce((sum, order) => sum + order.price, 0);
             document.getElementById('totalRevenue').textContent = `$${Math.round(totalRevenue / 1000)}K`;
+        }
+
+        // Summary statistics
+        function updateCustomerSummary(data = customers) {
+            const totalSpent = data.reduce((sum, customer) => sum + customer.totalSpent, 0);
+            const avgOrders = data.reduce((sum, customer) => sum + customer.orders, 0) / data.length;
+            document.getElementById('customerSummary').innerHTML = `
+                Total Customers: ${data.length} |
+                Total Spent: $${Math.round(totalSpent)} |
+                Average Orders: ${Math.round(avgOrders * 10) / 10}
+            `;
+        }
+
+        function updateEmployeeSummary(data = employees) {
+            const totalSales = data.reduce((sum, emp) => sum + emp.totalSales, 0);
+            const totalCommission = data.reduce((sum, emp) => sum + emp.commission, 0);
+            document.getElementById('employeeSummary').innerHTML = `
+                Total Employees: ${data.length} |
+                Total Sales: $${Math.round(totalSales)} |
+                Total Commission: $${Math.round(totalCommission)}
+            `;
+        }
+
+        function updateOrderSummary(data = orders) {
+            const totalPrice = data.reduce((sum, order) => sum + order.price, 0);
+            document.getElementById('orderSummary').innerHTML = `
+                Total Orders: ${data.length} |
+                Total Revenue: $${Math.round(totalPrice)}
+            `;
+        }
+
+        function updateCommissionSummary(data = commissions) {
+            const totalCommission = data.reduce((sum, comm) => sum + comm.commission, 0);
+            document.getElementById('commissionSummary').innerHTML = `
+                Total Commissions: ${data.length} |
+                Total Amount: $${Math.round(totalCommission)}
+            `;
         }
 
         // Populate tables
@@ -522,6 +748,7 @@
                     <td>$${customer.totalSpent}</td>
                 `;
             });
+            updateCustomerSummary(data);
         }
 
         function populateEmployeesTable(data = employees) {
@@ -538,6 +765,7 @@
                     <td>$${employee.commission}</td>
                 `;
             });
+            updateEmployeeSummary(data);
         }
 
         function populateOrdersTable(data = orders) {
@@ -554,6 +782,7 @@
                     <td>$${order.price}</td>
                 `;
             });
+            updateOrderSummary(data);
         }
 
         function populateCommissionsTable(data = commissions) {
@@ -570,6 +799,7 @@
                     <td>$${commission.commission}</td>
                 `;
             });
+            updateCommissionSummary(data);
         }
 
         // Filter functions
@@ -605,10 +835,12 @@
         function filterOrders() {
             const yearFilter = document.getElementById('orderYearFilter').value;
             const searchTerm = document.getElementById('orderSearch').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
             
             let filteredData = orders;
             if (yearFilter) {
-                filteredData = orders.filter(order => order.date.includes(yearFilter));
+                filteredData = filteredData.filter(order => order.date.includes(yearFilter));
             }
             if (searchTerm) {
                 filteredData = filteredData.filter(order => 
@@ -616,6 +848,12 @@
                     order.customerId.toString().includes(searchTerm) ||
                     order.employeeId.toString().includes(searchTerm)
                 );
+            }
+            if (startDate) {
+                filteredData = filteredData.filter(order => order.date >= startDate);
+            }
+            if (endDate) {
+                filteredData = filteredData.filter(order => order.date <= endDate);
             }
             
             populateOrdersTable(filteredData);
@@ -629,7 +867,78 @@
             populateCommissionsTable(filteredData);
         }
 
-        // Destroy existing charts to prevent memory leaks
+        // Export to CSV
+        function exportToCSV(tableId, filename) {
+            const table = document.getElementById(tableId);
+            const rows = table.querySelectorAll('tr');
+            let csv = [];
+            
+            for (let row of rows) {
+                const cols = row.querySelectorAll('td, th');
+                const rowData = [];
+                for (let col of cols) {
+                    rowData.push(`"${col.innerText.replace(/"/g, '""')}"`);
+                }
+                csv.push(rowData.join(','));
+            }
+            
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${filename}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Table sorting
+        function sortTable(tableId, colIndex, type = 'string') {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const state = sortStates[tableId];
+            
+            // Toggle sort direction
+            if (state.column === colIndex) {
+                state.ascending = !state.ascending;
+            } else {
+                state.column = colIndex;
+                state.ascending = true;
+            }
+            
+            rows.sort((a, b) => {
+                let aValue = a.cells[colIndex].textContent;
+                let bValue = b.cells[colIndex].textContent;
+                
+                if (type === 'number') {
+                    aValue = parseFloat(aValue.replace('$', '')) || 0;
+                    bValue = parseFloat(bValue.replace('$', '')) || 0;
+                }
+                
+                if (aValue < bValue) return state.ascending ? -1 : 1;
+                if (aValue > bValue) return state.ascending ? 1 : -1;
+                return 0;
+            });
+            
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Dark mode toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelectorAll('.stat-card, .tab-content, .chart-container, .table-container, .summary-stats, .sidebar, .header')
+                .forEach(el => el.classList.toggle('dark-mode'));
+            // Recreate charts to update colors
+            if (document.getElementById('analytics').classList.contains('active')) {
+                setTimeout(createCharts, 100);
+            }
+        }
+
+        // Chart creation
         function destroyCharts() {
             Object.values(chartInstances).forEach(chart => {
                 if (chart) {
@@ -639,9 +948,8 @@
             chartInstances = {};
         }
 
-        // Chart creation
         function createCharts() {
-            destroyCharts(); // Clean up existing charts
+            destroyCharts();
             createCityChart();
             createMonthlyChart();
             createEmployeeChart();
@@ -650,6 +958,7 @@
 
         function createCityChart() {
             const ctx = document.getElementById('cityChart').getContext('2d');
+            const isDarkMode = document.body.classList.contains('dark-mode');
             
             const citySales = {};
             cities.forEach(city => {
@@ -674,7 +983,10 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
                         }
                     }
                 }
@@ -683,6 +995,7 @@
 
         function createMonthlyChart() {
             const ctx = document.getElementById('monthlyChart').getContext('2d');
+            const isDarkMode = document.body.classList.contains('dark-mode');
             
             const monthlyData = Array.from({length: 12}, (_, i) => {
                 return orders.filter(order => {
@@ -699,8 +1012,8 @@
                     datasets: [{
                         label: 'Monthly Sales ($)',
                         data: monthlyData,
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderColor: isDarkMode ? '#8a9cff' : '#667eea',
+                        backgroundColor: isDarkMode ? 'rgba(138, 156, 255, 0.1)' : 'rgba(102, 126, 234, 0.1)',
                         tension: 0.4,
                         fill: true
                     }]
@@ -710,7 +1023,28 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grid: {
+                                color: isDarkMode ? '#444' : '#dee2e6'
+                            },
+                            ticks: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: isDarkMode ? '#444' : '#dee2e6'
+                            },
+                            ticks: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
                         }
                     }
                 }
@@ -719,6 +1053,7 @@
 
         function createEmployeeChart() {
             const ctx = document.getElementById('employeeChart').getContext('2d');
+            const isDarkMode = document.body.classList.contains('dark-mode');
             
             const topEmployees = employees
                 .sort((a, b) => b.commission - a.commission)
@@ -731,7 +1066,7 @@
                     datasets: [{
                         label: 'Commission ($)',
                         data: topEmployees.map(emp => emp.commission),
-                        backgroundColor: 'rgba(102, 126, 234, 0.8)'
+                        backgroundColor: isDarkMode ? 'rgba(138, 156, 255, 0.8)' : 'rgba(102, 126, 234, 0.8)'
                     }]
                 },
                 options: {
@@ -739,7 +1074,28 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grid: {
+                                color: isDarkMode ? '#444' : '#dee2e6'
+                            },
+                            ticks: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: isDarkMode ? '#444' : '#dee2e6'
+                            },
+                            ticks: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
                         }
                     }
                 }
@@ -748,6 +1104,7 @@
 
         function createQuarterChart() {
             const ctx = document.getElementById('quarterChart').getContext('2d');
+            const isDarkMode = document.body.classList.contains('dark-mode');
             
             const quarterData = {
                 2023: [0, 0, 0, 0],
@@ -771,12 +1128,12 @@
                         {
                             label: '2023 ($)',
                             data: quarterData[2023],
-                            backgroundColor: 'rgba(102, 126, 234, 0.8)'
+                            backgroundColor: isDarkMode ? 'rgba(138, 156, 255, 0.8)' : 'rgba(102, 126, 234, 0.8)'
                         },
                         {
                             label: '2024 ($)',
                             data: quarterData[2024],
-                            backgroundColor: 'rgba(118, 75, 162, 0.8)'
+                            backgroundColor: isDarkMode ? 'rgba(90, 60, 140, 0.8)' : 'rgba(118, 75, 162, 0.8)'
                         }
                     ]
                 },
@@ -785,7 +1142,28 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grid: {
+                                color: isDarkMode ? '#444' : '#dee2e6'
+                            },
+                            ticks: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: isDarkMode ? '#444' : '#dee2e6'
+                            },
+                            ticks: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: isDarkMode ? '#f5f5f5' : '#333'
+                            }
                         }
                     }
                 }
@@ -796,6 +1174,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateStatistics();
             populateCustomersTable();
+            updateCustomerSummary();
         });
     </script>
 </body>
