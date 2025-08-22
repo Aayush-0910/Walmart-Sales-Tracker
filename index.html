@@ -156,6 +156,8 @@
             border-radius: 10px;
             margin: 20px 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 400px;
         }
 
         .chart-title {
@@ -231,19 +233,19 @@
         <!-- Statistics Overview -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number">600</div>
+                <div class="stat-number" id="totalCustomers">600</div>
                 <div class="stat-label">Total Customers</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">60</div>
+                <div class="stat-number" id="totalEmployees">60</div>
                 <div class="stat-label">Employees</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">2,400</div>
+                <div class="stat-number" id="totalOrders">2,400</div>
                 <div class="stat-label">Total Orders</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">$485K</div>
+                <div class="stat-number" id="totalRevenue">$0</div>
                 <div class="stat-label">Revenue</div>
             </div>
         </div>
@@ -318,8 +320,8 @@
         <div id="orders" class="tab-content">
             <h2>Orders Database</h2>
             <div class="search-filter">
-                <input type="text" class="search-input" placeholder="Search orders..." oninput="filterTable('ordersTable', this.value)">
-                <select class="filter-select" onchange="filterTable('ordersTable', '', this.value)">
+                <input type="text" class="search-input" id="orderSearch" placeholder="Search orders..." oninput="filterTable('ordersTable', this.value)">
+                <select class="filter-select" id="orderYearFilter" onchange="filterOrders()">
                     <option value="">All Years</option>
                     <option value="2023">2023</option>
                     <option value="2024">2024</option>
@@ -377,19 +379,19 @@
             <div class="charts-grid">
                 <div class="chart-container">
                     <div class="chart-title">Sales by City</div>
-                    <canvas id="cityChart" width="400" height="400"></canvas>
+                    <canvas id="cityChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Monthly Sales Trend</div>
-                    <canvas id="monthlyChart" width="400" height="400"></canvas>
+                    <canvas id="monthlyChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Top Employees by Commission</div>
-                    <canvas id="employeeChart" width="400" height="400"></canvas>
+                    <canvas id="employeeChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Revenue by Quarter</div>
-                    <canvas id="quarterChart" width="400" height="400"></canvas>
+                    <canvas id="quarterChart"></canvas>
                 </div>
             </div>
         </div>
@@ -403,12 +405,14 @@
         const customers = [];
         for (let i = 1; i <= 600; i++) {
             const city = cities[Math.floor((i-1) / 100)];
+            const orders = Math.floor(Math.random() * 10) + 1;
+            const totalSpent = Math.round((Math.random() * 1000 + 100) * 100) / 100;
             customers.push({
                 id: i,
                 name: `Customer_${city}_${((i-1) % 100) + 1}`,
                 city: city,
-                orders: Math.floor(Math.random() * 10) + 1,
-                totalSpent: Math.round((Math.random() * 1000 + 100) * 100) / 100
+                orders: orders,
+                totalSpent: totalSpent
             });
         }
 
@@ -416,27 +420,30 @@
         const employees = [];
         for (let i = 1; i <= 60; i++) {
             const city = cities[Math.floor((i-1) / 10)];
+            const totalSales = Math.round((Math.random() * 10000 + 1000) * 100) / 100;
+            const commission = Math.round((totalSales * 0.05) * 100) / 100; // 5% commission
             employees.push({
                 id: i,
                 name: `Employee_${city}_${((i-1) % 10) + 1}`,
                 city: city,
-                totalSales: Math.round((Math.random() * 10000 + 1000) * 100) / 100,
-                commission: Math.round((Math.random() * 500 + 50) * 100) / 100
+                totalSales: totalSales,
+                commission: commission
             });
         }
 
-        // Generate sample orders
+        // Generate sample orders - more realistic quantity
         const orders = [];
-        for (let i = 1; i <= 240; i++) {
-            const year = i <= 120 ? 2023 : 2024;
+        for (let i = 1; i <= 2400; i++) {
+            const year = i <= 1200 ? 2023 : 2024;
             const month = Math.floor(Math.random() * 12) + 1;
             const day = Math.floor(Math.random() * 28) + 1;
+            const price = Math.round((Math.random() * 490 + 10) * 100) / 100;
             orders.push({
                 id: i,
                 customerId: Math.floor(Math.random() * 600) + 1,
                 employeeId: Math.floor(Math.random() * 60) + 1,
                 date: `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`,
-                price: Math.round((Math.random() * 490 + 10) * 100) / 100
+                price: price
             });
         }
 
@@ -457,6 +464,9 @@
             }
         }
 
+        // Store chart instances to prevent memory leaks
+        let chartInstances = {};
+
         // Tab switching function
         function showTab(tabName) {
             // Hide all tabs
@@ -472,17 +482,29 @@
             event.target.classList.add('active');
             
             // Load data for the selected tab
-            if (tabName === 'customers') {
-                populateCustomersTable();
-            } else if (tabName === 'employees') {
-                populateEmployeesTable();
-            } else if (tabName === 'orders') {
-                populateOrdersTable();
-            } else if (tabName === 'commissions') {
-                populateCommissionsTable();
-            } else if (tabName === 'analytics') {
-                createCharts();
+            switch(tabName) {
+                case 'customers':
+                    populateCustomersTable();
+                    break;
+                case 'employees':
+                    populateEmployeesTable();
+                    break;
+                case 'orders':
+                    populateOrdersTable();
+                    break;
+                case 'commissions':
+                    populateCommissionsTable();
+                    break;
+                case 'analytics':
+                    setTimeout(createCharts, 100); // Delay to ensure DOM is ready
+                    break;
             }
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const totalRevenue = orders.reduce((sum, order) => sum + order.price, 0);
+            document.getElementById('totalRevenue').textContent = `$${Math.round(totalRevenue / 1000)}K`;
         }
 
         // Populate tables
@@ -490,7 +512,7 @@
             const tbody = document.getElementById('customersTableBody');
             tbody.innerHTML = '';
             
-            data.slice(0, 50).forEach(customer => {
+            data.slice(0, 100).forEach(customer => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
                     <td>${customer.id}</td>
@@ -522,7 +544,7 @@
             const tbody = document.getElementById('ordersTableBody');
             tbody.innerHTML = '';
             
-            data.slice(0, 50).forEach(order => {
+            data.slice(0, 100).forEach(order => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
                     <td>${order.id}</td>
@@ -538,7 +560,7 @@
             const tbody = document.getElementById('commissionsTableBody');
             tbody.innerHTML = '';
             
-            data.slice(0, 50).forEach(commission => {
+            data.slice(0, 100).forEach(commission => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
                     <td>${commission.id}</td>
@@ -551,15 +573,14 @@
         }
 
         // Filter functions
-        function filterTable(tableId, searchTerm, yearFilter = '') {
+        function filterTable(tableId, searchTerm) {
             const table = document.getElementById(tableId);
             const rows = table.getElementsByTagName('tr');
             
             for (let i = 1; i < rows.length; i++) {
                 const row = rows[i];
                 const text = row.textContent.toLowerCase();
-                const showRow = text.includes(searchTerm.toLowerCase()) && 
-                               (yearFilter === '' || text.includes(yearFilter));
+                const showRow = text.includes(searchTerm.toLowerCase());
                 row.style.display = showRow ? '' : 'none';
             }
         }
@@ -581,6 +602,25 @@
             populateCustomersTable(filteredData);
         }
 
+        function filterOrders() {
+            const yearFilter = document.getElementById('orderYearFilter').value;
+            const searchTerm = document.getElementById('orderSearch').value;
+            
+            let filteredData = orders;
+            if (yearFilter) {
+                filteredData = orders.filter(order => order.date.includes(yearFilter));
+            }
+            if (searchTerm) {
+                filteredData = filteredData.filter(order => 
+                    order.id.toString().includes(searchTerm) ||
+                    order.customerId.toString().includes(searchTerm) ||
+                    order.employeeId.toString().includes(searchTerm)
+                );
+            }
+            
+            populateOrdersTable(filteredData);
+        }
+
         function filterCommissions(year) {
             let filteredData = commissions;
             if (year) {
@@ -589,8 +629,19 @@
             populateCommissionsTable(filteredData);
         }
 
+        // Destroy existing charts to prevent memory leaks
+        function destroyCharts() {
+            Object.values(chartInstances).forEach(chart => {
+                if (chart) {
+                    chart.destroy();
+                }
+            });
+            chartInstances = {};
+        }
+
         // Chart creation
         function createCharts() {
+            destroyCharts(); // Clean up existing charts
             createCityChart();
             createMonthlyChart();
             createEmployeeChart();
@@ -606,7 +657,7 @@
                     .reduce((sum, emp) => sum + emp.totalSales, 0);
             });
 
-            new Chart(ctx, {
+            chartInstances.cityChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: cities,
@@ -620,7 +671,12 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
                 }
             });
         }
@@ -635,13 +691,13 @@
                 }).reduce((sum, order) => sum + order.price, 0);
             });
 
-            new Chart(ctx, {
+            chartInstances.monthlyChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                     datasets: [{
-                        label: 'Monthly Sales',
+                        label: 'Monthly Sales ($)',
                         data: monthlyData,
                         borderColor: '#667eea',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
@@ -651,7 +707,12 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
             });
         }
@@ -663,12 +724,12 @@
                 .sort((a, b) => b.commission - a.commission)
                 .slice(0, 10);
 
-            new Chart(ctx, {
+            chartInstances.employeeChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: topEmployees.map(emp => emp.name.split('_').pop()),
+                    labels: topEmployees.map(emp => `Emp ${emp.id}`),
                     datasets: [{
-                        label: 'Commission',
+                        label: 'Commission ($)',
                         data: topEmployees.map(emp => emp.commission),
                         backgroundColor: 'rgba(102, 126, 234, 0.8)'
                     }]
@@ -697,21 +758,23 @@
                 const date = new Date(order.date);
                 const year = date.getFullYear();
                 const quarter = Math.floor(date.getMonth() / 3);
-                quarterData[year][quarter] += order.price;
+                if (quarterData[year]) {
+                    quarterData[year][quarter] += order.price;
+                }
             });
 
-            new Chart(ctx, {
+            chartInstances.quarterChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['Q1', 'Q2', 'Q3', 'Q4'],
                     datasets: [
                         {
-                            label: '2023',
+                            label: '2023 ($)',
                             data: quarterData[2023],
                             backgroundColor: 'rgba(102, 126, 234, 0.8)'
                         },
                         {
-                            label: '2024',
+                            label: '2024 ($)',
                             data: quarterData[2024],
                             backgroundColor: 'rgba(118, 75, 162, 0.8)'
                         }
@@ -731,6 +794,7 @@
 
         // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', function() {
+            updateStatistics();
             populateCustomersTable();
         });
     </script>
