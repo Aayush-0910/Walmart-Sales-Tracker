@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walmart Sales Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background-color: #f8f9ff;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input, .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 Walmart Sales Dashboard</h1>
+            <p>Sales Analytics & Employee Performance Tracking</p>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">600</div>
+                <div class="stat-label">Total Customers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">60</div>
+                <div class="stat-label">Employees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2,400</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">$485K</div>
+                <div class="stat-label">Revenue</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('customers')">Customers</button>
+            <button class="nav-tab" onclick="showTab('employees')">Employees</button>
+            <button class="nav-tab" onclick="showTab('orders')">Orders</button>
+            <button class="nav-tab" onclick="showTab('commissions')">Commissions</button>
+            <button class="nav-tab" onclick="showTab('analytics')">Analytics</button>
+        </div>
+
+        <!-- Customers Tab -->
+        <div id="customers" class="tab-content active">
+            <h2>Customer Database</h2>
+            <div class="search-filter">
+                <input type="text" class="search-input" id="customerSearch" placeholder="Search customers..." oninput="filterTable('customersTable', this.value)">
+                <select class="filter-select" id="cityFilter" onchange="filterByCity()">
+                    <option value="">All Cities</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Kolkata">Kolkata</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table id="customersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>City</th>
+                            <th>Orders</th>
+                            <th>Total Spent</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Employees Tab -->
+        <div id="employees" class="tab-content">
+            <h2>Employee Database</h2>
+            <div class="search-filter">
+                <input type="text" class="search-input" placeholder="Search employees..." oninput="filterTable('employeesTable', this.value)">
+            </div>
+            <div class="table-container">
+                <table id="employeesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>City</th>
+                            <th>Total Sales</th>
+                            <th>Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeesTableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders" class="tab-content">
+            <h2>Orders Database</h2>
+            <div class="search-filter">
+                <input type="text" class="search-input" placeholder="Search orders..." oninput="filterTable('ordersTable', this.value)">
+                <select class="filter-select" onchange="filterTable('ordersTable', '', this.value)">
+                    <option value="">All Years</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer ID</th>
+                            <th>Employee ID</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Commissions Tab -->
+        <div id="commissions" class="tab-content">
+            <h2>Sales Commissions</h2>
+            <div class="search-filter">
+                <select class="filter-select" onchange="filterCommissions(this.value)">
+                    <option value="">All Years</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table id="commissionsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Employee ID</th>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody id="commissionsTableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <h2>Sales Analytics</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Sales by City</div>
+                    <canvas id="cityChart" width="400" height="400"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Monthly Sales Trend</div>
+                    <canvas id="monthlyChart" width="400" height="400"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Top Employees by Commission</div>
+                    <canvas id="employeeChart" width="400" height="400"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Revenue by Quarter</div>
+                    <canvas id="quarterChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data based on your database structure
+        const cities = ["Delhi", "Bangalore", "Mumbai", "Hyderabad", "Chennai", "Kolkata"];
+        
+        // Generate sample customers
+        const customers = [];
+        for (let i = 1; i <= 600; i++) {
+            const city = cities[Math.floor((i-1) / 100)];
+            customers.push({
+                id: i,
+                name: `Customer_${city}_${((i-1) % 100) + 1}`,
+                city: city,
+                orders: Math.floor(Math.random() * 10) + 1,
+                totalSpent: Math.round((Math.random() * 1000 + 100) * 100) / 100
+            });
+        }
+
+        // Generate sample employees
+        const employees = [];
+        for (let i = 1; i <= 60; i++) {
+            const city = cities[Math.floor((i-1) / 10)];
+            employees.push({
+                id: i,
+                name: `Employee_${city}_${((i-1) % 10) + 1}`,
+                city: city,
+                totalSales: Math.round((Math.random() * 10000 + 1000) * 100) / 100,
+                commission: Math.round((Math.random() * 500 + 50) * 100) / 100
+            });
+        }
+
+        // Generate sample orders
+        const orders = [];
+        for (let i = 1; i <= 240; i++) {
+            const year = i <= 120 ? 2023 : 2024;
+            const month = Math.floor(Math.random() * 12) + 1;
+            const day = Math.floor(Math.random() * 28) + 1;
+            orders.push({
+                id: i,
+                customerId: Math.floor(Math.random() * 600) + 1,
+                employeeId: Math.floor(Math.random() * 60) + 1,
+                date: `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`,
+                price: Math.round((Math.random() * 490 + 10) * 100) / 100
+            });
+        }
+
+        // Generate sample commissions
+        const commissions = [];
+        let commId = 1;
+        for (let year = 2023; year <= 2024; year++) {
+            for (let month = 1; month <= 12; month++) {
+                for (let empId = 1; empId <= 60; empId++) {
+                    commissions.push({
+                        id: commId++,
+                        employeeId: empId,
+                        month: month,
+                        year: year,
+                        commission: Math.round((Math.random() * 200 + 10) * 100) / 100
+                    });
+                }
+            }
+        }
+
+        // Tab switching function
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all nav tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load data for the selected tab
+            if (tabName === 'customers') {
+                populateCustomersTable();
+            } else if (tabName === 'employees') {
+                populateEmployeesTable();
+            } else if (tabName === 'orders') {
+                populateOrdersTable();
+            } else if (tabName === 'commissions') {
+                populateCommissionsTable();
+            } else if (tabName === 'analytics') {
+                createCharts();
+            }
+        }
+
+        // Populate tables
+        function populateCustomersTable(data = customers) {
+            const tbody = document.getElementById('customersTableBody');
+            tbody.innerHTML = '';
+            
+            data.slice(0, 50).forEach(customer => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${customer.id}</td>
+                    <td>${customer.name}</td>
+                    <td>${customer.city}</td>
+                    <td>${customer.orders}</td>
+                    <td>$${customer.totalSpent}</td>
+                `;
+            });
+        }
+
+        function populateEmployeesTable(data = employees) {
+            const tbody = document.getElementById('employeesTableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach(employee => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${employee.id}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.city}</td>
+                    <td>$${employee.totalSales}</td>
+                    <td>$${employee.commission}</td>
+                `;
+            });
+        }
+
+        function populateOrdersTable(data = orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+            
+            data.slice(0, 50).forEach(order => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.customerId}</td>
+                    <td>${order.employeeId}</td>
+                    <td>${order.date}</td>
+                    <td>$${order.price}</td>
+                `;
+            });
+        }
+
+        function populateCommissionsTable(data = commissions) {
+            const tbody = document.getElementById('commissionsTableBody');
+            tbody.innerHTML = '';
+            
+            data.slice(0, 50).forEach(commission => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${commission.id}</td>
+                    <td>${commission.employeeId}</td>
+                    <td>${commission.month}</td>
+                    <td>${commission.year}</td>
+                    <td>$${commission.commission}</td>
+                `;
+            });
+        }
+
+        // Filter functions
+        function filterTable(tableId, searchTerm, yearFilter = '') {
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+                const showRow = text.includes(searchTerm.toLowerCase()) && 
+                               (yearFilter === '' || text.includes(yearFilter));
+                row.style.display = showRow ? '' : 'none';
+            }
+        }
+
+        function filterByCity() {
+            const cityFilter = document.getElementById('cityFilter').value;
+            const searchTerm = document.getElementById('customerSearch').value;
+            
+            let filteredData = customers;
+            if (cityFilter) {
+                filteredData = customers.filter(customer => customer.city === cityFilter);
+            }
+            if (searchTerm) {
+                filteredData = filteredData.filter(customer => 
+                    customer.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            
+            populateCustomersTable(filteredData);
+        }
+
+        function filterCommissions(year) {
+            let filteredData = commissions;
+            if (year) {
+                filteredData = commissions.filter(comm => comm.year.toString() === year);
+            }
+            populateCommissionsTable(filteredData);
+        }
+
+        // Chart creation
+        function createCharts() {
+            createCityChart();
+            createMonthlyChart();
+            createEmployeeChart();
+            createQuarterChart();
+        }
+
+        function createCityChart() {
+            const ctx = document.getElementById('cityChart').getContext('2d');
+            
+            const citySales = {};
+            cities.forEach(city => {
+                citySales[city] = employees.filter(emp => emp.city === city)
+                    .reduce((sum, emp) => sum + emp.totalSales, 0);
+            });
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: cities,
+                    datasets: [{
+                        data: Object.values(citySales),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', 
+                            '#4BC0C0', '#9966FF', '#FF9F40'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function createMonthlyChart() {
+            const ctx = document.getElementById('monthlyChart').getContext('2d');
+            
+            const monthlyData = Array.from({length: 12}, (_, i) => {
+                return orders.filter(order => {
+                    const orderMonth = new Date(order.date).getMonth();
+                    return orderMonth === i;
+                }).reduce((sum, order) => sum + order.price, 0);
+            });
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Monthly Sales',
+                        data: monthlyData,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function createEmployeeChart() {
+            const ctx = document.getElementById('employeeChart').getContext('2d');
+            
+            const topEmployees = employees
+                .sort((a, b) => b.commission - a.commission)
+                .slice(0, 10);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: topEmployees.map(emp => emp.name.split('_').pop()),
+                    datasets: [{
+                        label: 'Commission',
+                        data: topEmployees.map(emp => emp.commission),
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createQuarterChart() {
+            const ctx = document.getElementById('quarterChart').getContext('2d');
+            
+            const quarterData = {
+                2023: [0, 0, 0, 0],
+                2024: [0, 0, 0, 0]
+            };
+
+            orders.forEach(order => {
+                const date = new Date(order.date);
+                const year = date.getFullYear();
+                const quarter = Math.floor(date.getMonth() / 3);
+                quarterData[year][quarter] += order.price;
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [
+                        {
+                            label: '2023',
+                            data: quarterData[2023],
+                            backgroundColor: 'rgba(102, 126, 234, 0.8)'
+                        },
+                        {
+                            label: '2024',
+                            data: quarterData[2024],
+                            backgroundColor: 'rgba(118, 75, 162, 0.8)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            populateCustomersTable();
+        });
+    </script>
+</body>
+</html>
